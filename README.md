@@ -1,2 +1,3 @@
-# advent-of-code
-Advent of Code solutions in F#
+# Advent of Code solutions in F#
+
+http://adventofcode.com/

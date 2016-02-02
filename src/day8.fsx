@@ -6,12 +6,14 @@ let readInput () =
 
 module Part1 =
 
-  let rec memoryLength = function
-  | '\\' :: '\\' :: tail
-  | '\\' :: '"' :: tail
-  | '\\' :: 'x' ::  _ ::  _ :: tail -> 1 + (memoryLength tail)
-  | head::tail -> 1 + (memoryLength tail)
-  | [] -> 0 - "\"\"".Length
+  let memoryLength list =
+    let rec length acc = function
+      | '\\' :: '\\' :: tail
+      | '\\' :: '"' :: tail
+      | '\\' :: 'x' ::  _ ::  _ :: tail -> length (acc + 1) tail
+      | head::tail -> length (acc + 1) tail
+      | [] -> acc - "\"\"".Length
+    length 0 list
 
   let value () =
     readInput ()
@@ -19,15 +21,17 @@ module Part1 =
 
 module Part2 =
 
-  let rec length = function
-  | '\\' :: tail
-  | '"' :: tail -> 2 + length tail
-  | head :: tail -> 1 + length tail
-  | [] -> "\"\"".Length
+  let encodedLength list =
+    let rec length acc = function
+      | '\\' :: tail
+      | '"' :: tail -> length (acc + 2) tail
+      | head :: tail -> length (acc + 1) tail
+      | [] -> acc + "\"\"".Length
+    length 0 list
 
   let value () =
     readInput ()
-    |> Seq.sumBy (fun x -> (x |> List.ofSeq |> length) - x.Length)
+    |> Seq.sumBy (fun x -> (x |> List.ofSeq |> encodedLength) - x.Length)
 
 Part1.value () |> printfn "%d"   // 1350
 Part2.value () |> printfn "%d"   // 2085
